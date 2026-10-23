@@ -1,0 +1,10 @@
+math average: 83.33333333333333
+art average: 91.5
+runtime error: division by zero
+ --> 10-errors.fern:3:10
+  |
+3 |   return sum(scores) / len(scores)
+  |          ^^^^^^^^^^^^^^^^^^^^^^^^^
+stack trace:
+  at average (10-errors.fern:3:10)
+  at <main> (10-errors.fern:9:30)

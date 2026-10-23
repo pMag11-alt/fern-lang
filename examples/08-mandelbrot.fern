@@ -1,0 +1,29 @@
+// The Mandelbrot set, drawn with characters
+const width = 64
+const height = 24
+const max_iter = 40
+const palette = " .:-=+*#%@"
+
+fn escape_time(cx, cy) {
+  let x = 0
+  let y = 0
+  let i = 0
+  while i < max_iter and x * x + y * y <= 4 {
+    let next_x = x * x - y * y + cx
+    y = 2 * x * y + cy
+    x = next_x
+    i += 1
+  }
+  return i
+}
+
+for row in range(height) {
+  let line = ""
+  for col in range(width) {
+    let cx = -2.2 + col * 3.0 / width
+    let cy = -1.2 + row * 2.4 / height
+    let i = escape_time(cx, cy)
+    line += palette[floor(i * (len(palette) - 1) / max_iter)]
+  }
+  print(line)
+}

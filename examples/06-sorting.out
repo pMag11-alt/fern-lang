@@ -1,0 +1,4 @@
+sorted: [3, 3, 9, 10, 27, 38, 43, 82]
+index of 43: 6
+index of 5: -1
+matches sort(): true

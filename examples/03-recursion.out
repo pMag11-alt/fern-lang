@@ -1,0 +1,4 @@
+10! = 3628800
+fib(70) = 190392490709135
+Hanoi with 3 disks takes 7 moves:
+A->C A->B C->B A->C B->A B->C A->C

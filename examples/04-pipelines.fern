@@ -1,0 +1,34 @@
+// Pipelines: x |> f(y) means f(x, y)
+let text = "the quick brown fox jumps over the lazy dog the fox"
+
+let words = text |> split(" ")
+print(len(words), "words")
+
+// Count each word with a map
+let counts = {}
+for word in words {
+  counts[word] = (counts[word] or 0) + 1
+}
+
+// Sort by count (highest first), then alphabetically
+fn by_count_then_name(a, b) {
+  if counts[a] != counts[b] { return counts[b] - counts[a] }
+  if a < b { return -1 }
+  return 1
+}
+let ranked = keys(counts) |> sort(by_count_then_name) |> slice(0, 3)
+for word in ranked {
+  print("  ${word}: ${counts[word]}")
+}
+
+// map, filter and reduce
+let squares_of_odds = range(1, 10)
+  |> filter(fn(n) => n % 2 == 1)
+  |> map(fn(n) => n * n)
+print("odd squares:", squares_of_odds)
+print("their sum:", reduce(squares_of_odds, fn(acc, n) => acc + n, 0))
+
+// sort with a key function
+let people = [{name: "Grace", born: 1906}, {name: "Ada", born: 1815}, {name: "Alan", born: 1912}]
+let by_age = people |> sort(fn(p) => p.born) |> map(fn(p) => p.name)
+print("oldest first:", by_age)

@@ -1,0 +1,24 @@
+// Sieve of Eratosthenes: all primes below 100
+fn primes_below(n) {
+  let is_prime = map(range(n), fn(i) => i >= 2)
+  let p = 2
+  while p * p < n {
+    if is_prime[p] {
+      for multiple in range(p * p, n, p) {
+        is_prime[multiple] = false
+      }
+    }
+    p += 1
+  }
+  return range(n) |> filter(fn(i) => is_prime[i])
+}
+
+let primes = primes_below(100)
+print(len(primes), "primes below 100:")
+print(primes)
+
+// Twin primes differ by 2
+let twins = range(len(primes) - 1)
+  |> filter(fn(i) => primes[i + 1] - primes[i] == 2)
+  |> map(fn(i) => "(${primes[i]}, ${primes[i + 1]})")
+print("twin primes:", join(twins, " "))

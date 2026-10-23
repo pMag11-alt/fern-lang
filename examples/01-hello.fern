@@ -1,0 +1,33 @@
+// Hello, Fern: a quick tour
+let name = "Fern"
+let year = 2026
+print("Hello from ${name}! It is ${year}.")
+
+// Lists and maps
+let languages = ["Fern", "Python", "Rust"]
+push(languages, "Go")
+print("I know", len(languages), "languages:", join(languages, ", "))
+
+let ada = {name: "Ada Lovelace", born: 1815, field: "mathematics"}
+ada.age_at_publication = 1843 - ada.born
+print(ada)
+
+// Loops and conditionals
+for language in languages {
+  if language == "Fern" {
+    print("  * ${language} (that's me)")
+  } else if len(language) <= 2 {
+    print("  * ${language} (short and sweet)")
+  } else {
+    print("  * ${language}")
+  }
+}
+
+// Semicolons are optional; a newline ends a statement
+let total = 0
+let i = 1
+while i <= 100 {
+  total += i
+  i += 1
+}
+print("1 + 2 + ... + 100 =", total)

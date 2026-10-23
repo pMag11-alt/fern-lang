@@ -1,0 +1,31 @@
+// Closures: functions that remember
+fn make_counter() {
+  let count = 0
+  return fn() {
+    count += 1
+    return count
+  }
+}
+
+let a = make_counter()
+let b = make_counter()
+a()
+a()
+print("a has counted to", a())
+print("b has counted to", b())
+
+// Functions are values: return them, pass them, store them
+fn adder(n) => fn(x) => x + n
+let add10 = adder(10)
+print("add10(5) =", add10(5))
+
+fn compose(f, g) => fn(x) => f(g(x))
+let inc_then_double = compose(fn(x) => x * 2, fn(x) => x + 1)
+print("inc_then_double(4) =", inc_then_double(4))
+
+// Every loop iteration gets its own variable, so each closure sees its own i
+let greeters = []
+for i in range(3) {
+  push(greeters, fn() => "greeter #${i}")
+}
+for greet in greeters { print(greet()) }

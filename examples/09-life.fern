@@ -1,0 +1,44 @@
+// Conway's Game of Life: a glider crossing a small world
+const size = 8
+
+fn empty_world() => range(size) |> map(fn(r) => map(range(size), fn(c) => false))
+
+fn neighbours(world, r, c) {
+  let count = 0
+  for dr in [-1, 0, 1] {
+    for dc in [-1, 0, 1] {
+      if (dr != 0 or dc != 0) and world[(r + dr) % size][(c + dc) % size] {
+        count += 1
+      }
+    }
+  }
+  return count
+}
+
+fn step(world) {
+  let next = empty_world()
+  for r in range(size) {
+    for c in range(size) {
+      let n = neighbours(world, r, c)
+      next[r][c] = n == 3 or (n == 2 and world[r][c])
+    }
+  }
+  return next
+}
+
+fn show_world(world) {
+  for row in world {
+    print(row |> map(fn(alive) => (alive and "#") or ".") |> join(" "))
+  }
+}
+
+let world = empty_world()
+for cell in [[0, 1], [1, 2], [2, 0], [2, 1], [2, 2]] {
+  world[cell[0]][cell[1]] = true
+}
+
+for generation in range(3) {
+  print("generation ${generation}:")
+  show_world(world)
+  world = step(world)
+}

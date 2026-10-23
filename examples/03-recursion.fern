@@ -1,0 +1,30 @@
+// Recursion: factorial, Fibonacci with memoization, Towers of Hanoi
+fn factorial(n) {
+  if n <= 1 { return 1 }
+  return n * factorial(n - 1)
+}
+print("10! =", factorial(10))
+
+// Naive Fibonacci recomputes the same values exponentially often.
+// A map remembers results, turning it into a linear-time algorithm.
+let memo = {}
+fn fib(n) {
+  if n < 2 { return n }
+  let key = str(n)
+  if not has(memo, key) {
+    memo[key] = fib(n - 1) + fib(n - 2)
+  }
+  return memo[key]
+}
+print("fib(70) =", fib(70))
+
+fn hanoi(n, from, to, via, moves) {
+  if n == 0 { return moves }
+  hanoi(n - 1, from, via, to, moves)
+  push(moves, "${from}->${to}")
+  hanoi(n - 1, via, to, from, moves)
+  return moves
+}
+let moves = hanoi(3, "A", "C", "B", [])
+print("Hanoi with 3 disks takes", len(moves), "moves:")
+print(join(moves, " "))

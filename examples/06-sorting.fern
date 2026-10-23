@@ -1,0 +1,28 @@
+// Quicksort and binary search
+fn quicksort(xs) {
+  if len(xs) <= 1 { return xs }
+  let pivot = xs[len(xs) / 2 |> floor]
+  let less = filter(xs, fn(x) => x < pivot)
+  let equal = filter(xs, fn(x) => x == pivot)
+  let greater = filter(xs, fn(x) => x > pivot)
+  return quicksort(less) + equal + quicksort(greater)
+}
+
+fn binary_search(xs, target) {
+  let lo = 0
+  let hi = len(xs) - 1
+  while lo <= hi {
+    let mid = floor((lo + hi) / 2)
+    if xs[mid] == target { return mid }
+    if xs[mid] < target { lo = mid + 1 } else { hi = mid - 1 }
+  }
+  return -1
+}
+
+let data = [38, 27, 43, 3, 9, 82, 10, 3]
+let sorted = quicksort(data)
+print("sorted:", sorted)
+print("index of 43:", binary_search(sorted, 43))
+print("index of 5:", binary_search(sorted, 5))
+assert(sorted == sort(data), "quicksort agrees with the built-in sort")
+print("matches sort():", sorted == sort(data))

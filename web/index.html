@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fern Playground</title>
+  <meta name="description" content="Write and run Fern, a small, friendly programming language, in your browser.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Apply a saved theme before the first paint to avoid a flash of the wrong colours.
+    try { const t = localStorage.getItem("fern.theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+  </script>
+  <script type="module" src="js/web/playground.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Fern playground home">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><use href="#leaf"/></svg>
+      <span class="brand-name">Fern</span>
+      <span class="brand-tag">a small, friendly language</span>
+    </a>
+    <nav class="actions" aria-label="Playground actions">
+      <label class="examples">
+        <span class="visually-hidden">Examples</span>
+        <select id="examples">
+          <option value="" disabled selected>Examples…</option>
+        </select>
+      </label>
+      <button id="run" class="primary" type="button" title="Run (Ctrl+Enter / ⌘+Enter)">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>
+        Run
+      </button>
+      <button id="stop" class="danger" type="button" title="Stop (Esc)" hidden>
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="3.5" y="3.5" width="9" height="9" rx="1" fill="currentColor"/></svg>
+        Stop
+      </button>
+      <button id="share" type="button" title="Copy a link to this program">Share</button>
+      <button id="help-open" type="button" title="Language guide">Guide</button>
+      <button id="theme" class="icon" type="button" title="Toggle dark mode" aria-label="Toggle dark mode">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="currentColor"/></svg>
+      </button>
+      <a class="icon" href="https://github.com/pMag11-alt/fern-lang" title="Source on GitHub" aria-label="Source on GitHub">
+        <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="workspace">
+    <section class="pane editor-pane" aria-label="Editor">
+      <div class="editor">
+        <pre class="gutter" id="gutter" aria-hidden="true"></pre>
+        <div class="code">
+          <pre class="highlight" id="highlight" aria-hidden="true"></pre>
+          <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off"
+                    wrap="off" aria-label="Fern source code"></textarea>
+        </div>
+      </div>
+      <footer class="statusbar">
+        <button id="problems" type="button" class="problems">✓ No problems</button>
+        <span id="cursor" class="cursor">Ln 1, Col 1</span>
+      </footer>
+    </section>
+
+    <section class="pane output-pane" aria-label="Results">
+      <div class="tabs" role="tablist" aria-label="Result views">
+        <button role="tab" data-tab="output" aria-selected="true" aria-controls="panel-output">Output</button>
+        <button role="tab" data-tab="tokens" aria-selected="false" aria-controls="panel-tokens" tabindex="-1">Tokens</button>
+        <button role="tab" data-tab="ast" aria-selected="false" aria-controls="panel-ast" tabindex="-1">Syntax tree</button>
+        <span id="run-status" class="run-status" aria-live="polite"></span>
+      </div>
+      <pre id="panel-output" class="panel output" role="tabpanel" aria-label="Program output"
+           data-empty="Press Run, or Ctrl+Enter, to run the program."></pre>
+      <div id="panel-tokens" role="tabpanel" class="panel" hidden><div id="tokens" class="tokens"></div></div>
+      <pre id="panel-ast" role="tabpanel" class="panel" hidden><code id="ast"></code></pre>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <dialog id="help" aria-labelledby="help-title">
+    <div class="help-head">
+      <h2 id="help-title">Fern in two minutes</h2>
+      <button id="help-close" type="button" class="icon" aria-label="Close">✕</button>
+    </div>
+    <div class="help-body">
+      <section>
+        <h3>Basics</h3>
+<pre><code>let name = "Fern"        // a variable
+const max = 10           // can't be reassigned
+print("Hi, ${name}!")    // string interpolation
+let xs = [1, 2, 3]       // lists: xs[0], xs[-1]
+let m = {a: 1, "b c": 2} // maps: m.a, m["b c"]</code></pre>
+        <p>Semicolons are optional; a line break ends a statement. Only <code>false</code> and <code>nil</code> are
+          falsy.</p>
+      </section>
+      <section>
+        <h3>Control flow</h3>
+<pre><code>if x > 0 { ... } else if x < 0 { ... } else { ... }
+while i < 10 { i += 1 }
+for item in xs { ... }       // also strings and map keys
+for i in range(5) { ... }    // break, continue</code></pre>
+      </section>
+      <section>
+        <h3>Functions</h3>
+<pre><code>fn add(a, b) { return a + b }
+fn square(x) => x * x
+let twice = fn(f, x) => f(f(x))
+xs |> map(square) |> sum     // x |> f(y) is f(x, y)</code></pre>
+        <p>Functions are values and closures: they remember the variables around them.</p>
+      </section>
+      <section>
+        <h3>Built-ins</h3>
+        <p class="builtins"><code>print len type str num int range push pop insert remove map filter reduce each find
+          any all sort reverse join split slice contains index_of sum min max keys values entries has upper lower trim
+          starts_with ends_with replace chars ord chr abs floor ceil round sqrt random clock assert panic</code></p>
+      </section>
+      <section>
+        <h3>Keys</h3>
+        <p><kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Enter</kbd> run · <kbd>Esc</kbd> stop · <kbd>Tab</kbd> /
+          <kbd>Shift</kbd>+<kbd>Tab</kbd> indent and outdent</p>
+      </section>
+    </div>
+  </dialog>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="leaf" viewBox="0 0 32 32">
+      <path d="M16 30V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M16 13c-1-4-5-7-10-7 0 5 4 9 10 9zM16 19c1-4 5-7 10-7 0 5-4 9-10 9zM16 25c-1-3-4-5-8-5 0 4 3 6 8 6zM16 10c0-3 2-6 4-8 1 3 0 6-4 8z" fill="currentColor"/>
+    </symbol>
+  </svg>
+</body>
+</html>

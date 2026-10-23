@@ -1,0 +1,24 @@
+{
+  "name": "fern-lang",
+  "version": "1.0.0",
+  "description": "Fern: a small, friendly programming language with a tree-walking interpreter and an in-browser playground.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "fern": "dist/cli/fern.js"
+  },
+  "scripts": {
+    "build": "tsc && node scripts/build-site.js",
+    "start": "npm run build && node scripts/serve.js",
+    "test": "tsc && node --test \"dist/test/*.test.js\"",
+    "fern": "tsc && node dist/cli/fern.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2"
+  }
+}
